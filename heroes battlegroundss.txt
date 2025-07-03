@@ -41,5 +41,5 @@ if success and result and #result > 0 then
         warn("[Loading] Please inject script again.")
     end
 else
-    warn("[Loading] Failed to load script. Please inject script again.")
+    warn("sub to kovlost")
 end
