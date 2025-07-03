@@ -8,8 +8,8 @@ local function printProgress(percent)
 end
 
 print("[Loading] Warming up the server (simulating real script injection)...")
-local warmupSuccess, warmupResult = pcall(function()
-    return game:HttpGet(url)
+local warmupSuccess = pcall(function()
+    game:HttpGet(url)
 end)
 if warmupSuccess then
     print("[Loading] Server responded to warmup request.")
@@ -27,19 +27,37 @@ wait(1)
 printProgress(100)
 print("[Loading] The server is warm, loading the script...")
 
-local success, result = pcall(function()
-    return game:HttpGet(url)
-end)
-if success and result and #result > 0 then
-    local ok, err = pcall(function()
-        loadstring(result)()
+-- Сброс флага перед инжектом
+_G.character_model_updated = false
+
+local function injectScript()
+    local success, result = pcall(function()
+        return game:HttpGet(url)
     end)
-    if ok then
-        print("[Loading] Script loaded successfully!")
+    if success and result and #result > 0 then
+        local ok, err = pcall(function()
+            loadstring(result)()
+        end)
+        if ok then
+            print("[Loading] Script loaded successfully!")
+            return true
+        else
+            warn("[Loading] Script error: " .. tostring(err))
+        end
     else
-        warn("[Loading] Script error: " .. tostring(err))
-        warn("[Loading] Please inject script again.")
+        warn("[Loading] Failed to load script.")
     end
-else
-    warn("Please inject script again")
+    return false
+end
+
+injectScript()
+wait(2) -- ждём появления сообщения
+
+if not _G.character_model_updated then
+    warn("[Loading] Character model not updated, retrying injection...")
+    injectScript()
+    wait(2)
+    if not _G.character_model_updated then
+        warn("[Loading] Still no character model update. Please inject script again.")
+    end
 end
