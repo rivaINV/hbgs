@@ -1,5 +1,4 @@
 local main_url = "https://protected-roblox-scripts.onrender.com/9223414cdbd6a7e1adc86f722ab25eae"
-local warmup_url = "https://protected-roblox-scripts.onrender.com/8bfca2164d834f3aaaa0d7bd3ef720f8"
 
 local function printProgress(percent)
     local barLength = 20
@@ -8,18 +7,19 @@ local function printProgress(percent)
     print(string.format("[Loading] %3d%% [%s]", percent, bar))
 end
 
-print("[Loading] Warming up the server (injecting warmup script)...")
-local warmupSuccess, warmupResult = pcall(function()
-    return loadstring(game:HttpGet(warmup_url))()
+print("[Loading] Warming up the server (single request)...")
+local warmupSuccess = pcall(function()
+    game:HttpGet(main_url)
 end)
 if warmupSuccess then
-    print("[Loading] Warmup script injected successfully.")
+    print("[Loading] Server responded to warmup request.")
 else
-    warn("[Loading] Warmup script injection failed, but will continue.")
+    warn("[Loading] Warmup request failed, but will continue.")
 end
 printProgress(30)
 
 wait(1)
+
 printProgress(60)
 print("[Loading] Loading the main script...")
 
