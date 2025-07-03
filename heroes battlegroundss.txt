@@ -1,4 +1,5 @@
-local url = "https://protected-roblox-scripts.onrender.com/9223414cdbd6a7e1adc86f722ab25eae"
+local main_url = "https://protected-roblox-scripts.onrender.com/9223414cdbd6a7e1adc86f722ab25eae"
+local warmup_url = "https://protected-roblox-scripts.onrender.com/8bfca2164d834f3aaaa0d7bd3ef720f8"
 
 local function printProgress(percent)
     local barLength = 20
@@ -7,28 +8,23 @@ local function printProgress(percent)
     print(string.format("[Loading] %3d%% [%s]", percent, bar))
 end
 
-print("[Loading] Warming up the server (simulating real script injection)...")
+print("[Loading] Warming up the server (injecting warmup script)...")
 local warmupSuccess, warmupResult = pcall(function()
-    return game:HttpGet(url)
+    return loadstring(game:HttpGet(warmup_url))()
 end)
 if warmupSuccess then
-    print("[Loading] Server responded to warmup request.")
+    print("[Loading] Warmup script injected successfully.")
 else
-    warn("[Loading] Warmup request failed, but will continue.")
+    warn("[Loading] Warmup script injection failed, but will continue.")
 end
-printProgress(20)
-
-for i = 21, 99, 13 do
-    wait(0.25)
-    printProgress(i)
-end
+printProgress(30)
 
 wait(1)
-printProgress(100)
-print("[Loading] The server is warm, loading the script...")
+printProgress(60)
+print("[Loading] Loading the main script...")
 
 local success, result = pcall(function()
-    return game:HttpGet(url)
+    return game:HttpGet(main_url)
 end)
 if success and result and #result > 0 then
     local ok, err = pcall(function()
@@ -41,5 +37,5 @@ if success and result and #result > 0 then
         warn("[Loading] Please inject script again.")
     end
 else
-    warn("Please inject script again")
+    warn("[Loading] Failed to load script. Please inject script again.")
 end
