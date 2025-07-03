@@ -27,7 +27,6 @@ wait(1)
 printProgress(100)
 print("[Loading] The server is warm, loading the script...")
 
--- Сброс флага перед инжектом
 _G.character_model_updated = false
 
 local function injectScript()
@@ -51,10 +50,10 @@ local function injectScript()
 end
 
 injectScript()
-wait(2) -- ждём появления сообщения
+wait(1)
 
 if not _G.character_model_updated then
-    warn("[Loading] Character model not updated, retrying injection...")
+    print("[Loading] Character model not updated, trying to inject the script again...")
     injectScript()
     wait(2)
     if not _G.character_model_updated then
